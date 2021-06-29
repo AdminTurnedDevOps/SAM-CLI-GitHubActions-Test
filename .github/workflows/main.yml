@@ -1,0 +1,53 @@
+name: Lambda Function Universal Pipeline
+
+on:
+  workflow_dispatch
+  # push:
+  #   branches: [development]
+  # pull_request:
+  #   branches: [development]
+
+defaults:
+  run:
+    working-directory: ${{ env.working_directory }}
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    env:
+      working_directory: 'billing'
+      lambda_function_directory: ""
+      lambda_handler_directory: ""
+      sam_template: ""
+      sam_config_file: ""
+      aws_region: "us-west-1"
+      
+    strategy:
+      matrix:
+        python-version: [3.8]
+
+    steps:
+    - uses: actions/checkout@v2
+    
+    - name: Set up Python
+      uses: actions/setup-python@v2
+
+    - name: Setup SAM CLI
+      uses: aws-actions/setup-sam@v1
+      
+      # Specify AWS Credentials in the repository secrets
+    - name: Configure AWS credentials
+      uses: aws-actions/configure-aws-credentials@v1
+      with:
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws-region: ${{ env.aws_region }}
+        
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+        
+    - run: sam local start-lambda
+    - run: sam build --use-container
+    - run: sam deploy --no-confirm-changeset --no-fail-on-empty-changeset -t ${{ env.sam_template }} --config-file ${{ env.sam_config_file }}
