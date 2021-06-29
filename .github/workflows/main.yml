@@ -7,21 +7,21 @@ on:
   # pull_request:
   #   branches: [development]
 
-defaults:
-  run:
-    working-directory: ${{ env.working_directory }}
+# defaults:
+#   run:
+#     working-directory: ${{ env.working_directory }}
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
     env:
       working_directory: 'sam-app'
+      aws_region: "us-east-1"
+      sam_stack_name: "teststack" 
       #lambda_function_directory: ""
       #lambda_handler_directory: ""
       #sam_template: ""
       #sam_config_file: ""
-      aws_region: "us-east-1"
-      sam_stack_name: "teststack" 
       
     strategy:
       matrix:
