@@ -18,6 +18,7 @@ jobs:
       working_directory: 'sam-app'
       aws_region: "us-east-1"
       sam_stack_name: "teststack" 
+      sam_s3_bucket: "clouddev.engineering"
       #lambda_function_directory: ""
       #lambda_handler_directory: ""
       #sam_template: ""
@@ -46,6 +47,6 @@ jobs:
         
     - run: sam build --use-container
       working-directory: 'sam-app'
-    - run: sam deploy --stack-name ${{ env.sam_stack_name }}
+    - run: sam deploy --stack-name ${{ env.sam_stack_name }} --s3-bucket ${{ env.sam_s3_bucket }}
       working-directory: 'sam-app'
     #- run: sam deploy --no-confirm-changeset --no-fail-on-empty-changeset -t ${{ env.sam_template }} --config-file ${{ env.sam_config_file }}
