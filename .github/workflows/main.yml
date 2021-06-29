@@ -51,4 +51,3 @@ jobs:
       working-directory: 'sam-app'
     - run: sam deploy --stack-name ${{ env.sam_stack_name }} --s3-bucket ${{ env.sam_s3_bucket }} --capabilities CAPABILITY_IAM
       working-directory: 'sam-app'
-    #- run: sam deploy --no-confirm-changeset --no-fail-on-empty-changeset -t ${{ env.sam_template }} --config-file ${{ env.sam_config_file }}
