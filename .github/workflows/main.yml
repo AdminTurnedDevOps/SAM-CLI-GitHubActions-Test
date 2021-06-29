@@ -45,5 +45,7 @@ jobs:
         aws-region: ${{ env.aws_region }}
         
     - run: sam build --use-container
+      working-directory: 'sam-app'
     - run: sam deploy --stack-name ${{ env.sam_stack_name }}
+      working-directory: 'sam-app'
     #- run: sam deploy --no-confirm-changeset --no-fail-on-empty-changeset -t ${{ env.sam_template }} --config-file ${{ env.sam_config_file }}
