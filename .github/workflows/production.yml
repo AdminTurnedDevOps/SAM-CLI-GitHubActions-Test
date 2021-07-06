@@ -1,4 +1,4 @@
-name: Lambda Function Universal Pipeline
+name: Lambda Function Universal Pipeline - Production
 
 on:
   workflow_dispatch
@@ -6,10 +6,6 @@ on:
   #   branches: [development]
   # pull_request:
   #   branches: [development]
-
-# defaults:
-#   run:
-#     working-directory: ${{ env.working_directory }}
 
 jobs:
   deploy:
@@ -19,10 +15,6 @@ jobs:
       aws_region: "us-east-1"
       sam_stack_name: "teststack1" 
       sam_s3_bucket: "clouddev.engineering"
-      #lambda_function_directory: ""
-      #lambda_handler_directory: ""
-      #sam_template: ""
-      #sam_config_file: ""
       
     strategy:
       matrix:
@@ -41,13 +33,13 @@ jobs:
     - name: Configure AWS credentials
       uses: aws-actions/configure-aws-credentials@v1
       with:
-        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID_Production }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY_Production }}
         aws-region: ${{ env.aws_region }}
         
     - run: sam build --use-container
-      working-directory: 'sam-app'
+      working-directory: ${{ .env.working_directory }}
     - run: sam validate
-      working-directory: 'sam-app'
+      working-directory: ${{ .env.working_directory }}
     - run: sam deploy --stack-name ${{ env.sam_stack_name }} --s3-bucket ${{ env.sam_s3_bucket }} --capabilities CAPABILITY_IAM
-      working-directory: 'sam-app'
+      working-directory: ${{ .env.working_directory }}

@@ -1,0 +1,45 @@
+name: Lambda Function Universal Pipeline - Staging
+
+on:
+  workflow_dispatch
+  # push:
+  #   branches: [development]
+  # pull_request:
+  #   branches: [development]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    env:
+      working_directory: 'sam-app'
+      aws_region: "us-east-1"
+      sam_stack_name: "teststack1" 
+      sam_s3_bucket: "clouddev.engineering"
+      
+    strategy:
+      matrix:
+        python-version: [3.8]
+
+    steps:
+    - uses: actions/checkout@v2
+    
+    - name: Set up Python
+      uses: actions/setup-python@v2
+
+    - name: Setup SAM CLI
+      uses: aws-actions/setup-sam@v1
+      
+      # Specify AWS Credentials in the repository secrets
+    - name: Configure AWS credentials
+      uses: aws-actions/configure-aws-credentials@v1
+      with:
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID_Staging }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY_Staging }}
+        aws-region: ${{ env.aws_region }}
+        
+    - run: sam build --use-container
+      working-directory: ${{ .env.working_directory }}
+    - run: sam validate
+      working-directory: ${{ .env.working_directory }}
+    - run: sam deploy --stack-name ${{ env.sam_stack_name }} --s3-bucket ${{ env.sam_s3_bucket }} --capabilities CAPABILITY_IAM
+      working-directory: ${{ .env.working_directory }}
