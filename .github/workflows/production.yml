@@ -38,8 +38,8 @@ jobs:
         aws-region: ${{ env.aws_region }}
         
     - run: sam build --use-container
-      working-directory: ${{ .env.working_directory }}
+      working-directory: ${{ env.working_directory }}
     - run: sam validate
-      working-directory: ${{ .env.working_directory }}
+      working-directory: ${{ env.working_directory }}
     - run: sam deploy --stack-name ${{ env.sam_stack_name }} --s3-bucket ${{ env.sam_s3_bucket }} --capabilities CAPABILITY_IAM
-      working-directory: ${{ .env.working_directory }}
+      working-directory: ${{ .nv.working_directory }}
