@@ -11,7 +11,7 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     env:
-      working_directory: 'sam-app'
+      hello_world_working_directory: './sam-app'
       aws_region: "us-east-1"
       sam_stack_name: "teststack1" 
       sam_s3_bucket: "clouddev.engineering"
@@ -38,8 +38,8 @@ jobs:
         aws-region: ${{ env.aws_region }}
         
     - run: sam build --use-container
-      working-directory: ${{ env.working_directory }}
+      working-directory: ${{ env.hello_world_working_directory }}
     - run: sam validate
-      working-directory: ${{ env.working_directory }}
+      working-directory: ${{ env.hello_world_working_directory }}
     - run: sam deploy --stack-name ${{ env.sam_stack_name }} --s3-bucket ${{ env.sam_s3_bucket }} --capabilities CAPABILITY_IAM
-      working-directory: ${{ env.working_directory }}
+      working-directory: ${{ env.hello_world_working_directory }}
