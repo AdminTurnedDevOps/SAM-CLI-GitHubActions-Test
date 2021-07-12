@@ -37,9 +37,9 @@ jobs:
         aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY_Staging }}
         aws-region: ${{ env.aws_region }}
         
-    - run: sam build --use-container -t '../'
+    - run: sam build --use-container -t '../template.yaml'
       working-directory: ${{ env.hello_world_working_directory }}
-    - run: sam validate -t '../'
+    - run: sam validate -t '../template.yaml'
       working-directory: ${{ env.hello_world_working_directory }}
-    - run: sam deploy --stack-name ${{ env.sam_stack_name }} --s3-bucket ${{ env.sam_s3_bucket }} --capabilities CAPABILITY_IAM -t '../'
+    - run: sam deploy --stack-name ${{ env.sam_stack_name }} --s3-bucket ${{ env.sam_s3_bucket }} --capabilities CAPABILITY_IAM -t '../template.yaml'
       working-directory: ${{ env.hello_world_working_directory }}
